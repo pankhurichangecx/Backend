@@ -72,17 +72,40 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+
+
 exports.deleteUser = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      message: "success",
-      data: null,
+    const { id } = req.params;
+
+    // Find the user by ID and update the "deleted" field to true
+    const DeleteUser = await User.findByIdAndUpdate(
+      id,
+      { deleted: true },
+      { new: true }
+    );
+
+    if (!DeleteUser) {
+      throw new Error("User not found", 404);
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "User soft deleted successfully",
+      data: DeleteUser,
     });
   } catch (err) {
-    res.status(404).json({
-      status: "error!",
-      message: err + err,
+    res.status(err.statusCode || 500).json({
+      status: "error",
+      message: err.message,
     });
   }
+};
+
+// userController.js
+exports.getUserRole = (req, res) => {
+  // Assuming req.user contains the user's information, including role
+  const userRole = req.user.role; // Adjust this based on your user data structure
+
+  res.json({ role: userRole });
 };

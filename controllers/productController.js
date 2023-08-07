@@ -1,9 +1,10 @@
 const Product = require("./../models/productModel");
 
+// 127.0.0.1:3000/api/v1/products/
 exports.createProduct = async (req, res) => {
   try {
-    const newProduct = await Product.create(req.body);   // It uses await to wait for the database operation to complete before proceeding
-    res.status(201).json({    //status code 201 corresponds to the "Created" status.
+    const newProduct = await Product.create(req.body);
+    res.status(201).json({
       status: "success",
       data: {
         product: newProduct,
@@ -20,18 +21,32 @@ exports.createProduct = async (req, res) => {
 
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();    //here Product is a model
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8; // Set default limit to 8 products per page
+
+    const totalProducts = await Product.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const products = await Product.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    if (!products || products.length === 0) {
+      throw new Error("Products not found.", 404);
+    }
 
     res.status(200).json({
       status: "success",
       data: {
         products,
+        currentPage: page,
+        totalPages,
       },
     });
   } catch (err) {
-    res.status(400).json({
+    return res.status(err.statusCode || 500).json({
       status: "error!",
-      message: "Not able to get data",
+      message: err.message,
     });
   }
 };
@@ -40,6 +55,9 @@ exports.getProduct = async (req, res) => {
   try {
     // console.log(req.params.id);
     const product = await Product.findById(req.params.id.trim());
+    if (!product) {
+      throw new Error("product not found", 404);
+    }
 
     res.status(200).json({
       status: "success",
@@ -48,9 +66,9 @@ exports.getProduct = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(404).json({
+    return res.status(err.statusCode || 500).json({
       status: "error!",
-      message: err + err,
+      message: err.message,
     });
   }
 };
@@ -91,5 +109,3 @@ exports.deleteProduct = async (req, res) => {
     });
   }
 };
-
-

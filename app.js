@@ -1,50 +1,25 @@
 const express = require("express");
+const cors = require('cors');
 const productRouter = require("./routes/productRoutes");
 const userRouter = require("./routes/userRoutes");
 const orderRouter = require("./routes/orderRoutes");
+const cartRouter = require("./routes/cartRoutes")
 // const authRouter = require('./routes/authRoutes');
+const errorMiddleware = require("./error/errMiddleware");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
 
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/cart", cartRouter);
+app.use(errorMiddleware);
 
 
 module.exports = app;
 
-
-// const express = require("express");
-// const mongoose = require("mongoose");
-// const app = express();
-
-// // ...other imports...
-
-// // Connect to the MongoDB database
-// mongoose.connect("mongodb://localhost:27017/myapp", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
-// // Middleware to parse JSON in the request body
-// app.use(express.json());
-
-// // Routes
-// const productRouter = require("./routes/productRoutes");
-// const userRouter = require("./routes/userRoutes");
-// const orderRouter = require("./routes/orderRoutes");
-// const authRouter = require("./routes/authRoutes");
-
-// app.use("/api/v1/products", productRouter);
-// app.use("/api/v1/users", userRouter);
-// app.use("/api/v1/orders", orderRouter);
-// app.use("/api/v1/auth", authRouter); // Use the authentication route
-
-// // Start the server
-// const port = 3000;
-// app.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
 
 

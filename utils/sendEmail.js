@@ -1,28 +1,24 @@
-const nodemailer = require('nodemailer');  //allows us to send emails from node.js applications
+const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
-  // Create a transporter using SMTP settings or any other supported transport
-  const transporter = nodemailer.createTransport({   //The transporter is responsible for connecting to your email server to send the email.
-    host: 'smtp.example.com',
-    port: 587,
-    secure: false, // Set to true for secure connection if using SSL/TLS
+  // 1) create a transporter
+  var transport = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     auth: {
-      user: 'your_email@example.com', // Your email address
-      pass: 'your_email_password', // Your email password or an app password for security
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
-
-  // Define email options
+  // 2) Define a email options
   const mailOptions = {
-    from: 'Your Name <your_email@example.com>', // Sender address
-    to: options.email, // Recipient's email address
-    subject: options.subject, // Email subject
-    text: options.message, // Plain text body
-    // html: '<p>HTML version of the email body</p>' // Uncomment and add HTML version if needed
+    from: "Pankhuri <pankhurigarg@gmail.com>",
+    to: options.email,
+    subject: options.subject,
+    text: options.message,
   };
-
-  // Send the email
-  await transporter.sendMail(mailOptions);
+  // 3) Actually send a email
+  await transport.sendMail(mailOptions);
 };
 
 module.exports = sendEmail;

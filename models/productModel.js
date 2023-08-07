@@ -28,7 +28,13 @@ const productSchema = new mongoose.Schema({
   photoUrl: {
     type: String,
     required: [true, "A photo must have url"],
+
   },
+  category: {
+    type: String,
+    enum: ["women", "men"],
+    required: [true, "Specify the category of product"]
+  }
 });
 
 const Product = mongoose.model("Product", productSchema);
