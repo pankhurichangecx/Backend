@@ -86,6 +86,8 @@ exports.removeCart = async (req, res) => {
   }
 };
 
+//Quantity
+
 exports.updateCart = async (req, res) => {
   try {
     const { id } = req.params;

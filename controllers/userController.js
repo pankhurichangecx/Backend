@@ -102,10 +102,9 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// userController.js
 exports.getUserRole = (req, res) => {
   // Assuming req.user contains the user's information, including role
-  const userRole = req.user.role; // Adjust this based on your user data structure
+  const userRole = req.user.role; 
 
   res.json({ role: userRole });
 };

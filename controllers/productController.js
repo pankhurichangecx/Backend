@@ -22,13 +22,18 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 8; // Set default limit to 8 products per page
+    const limit = parseInt(req.query.limit); // Set default limit to 8 products per page
+    const search = req.query.search || ""; // Get the search query from request parameters
 
-    const totalProducts = await Product.countDocuments();
+    const query = search
+      ? { name: { $regex: search, $options: "i" } } // Case-insensitive search
+      : {};
+
+    const totalProducts = await Product.countDocuments(query);
     const totalPages = Math.ceil(totalProducts / limit);
 
-    const products = await Product.find()
-      .skip((page - 1) * limit)
+    const products = await Product.find(query)
+      .skip((page - 1) * limit)   //update it
       .limit(limit);
 
     if (!products || products.length === 0) {
@@ -50,6 +55,7 @@ exports.getAllProducts = async (req, res) => {
     });
   }
 };
+
 
 exports.getProduct = async (req, res) => {
   try {

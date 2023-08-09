@@ -15,6 +15,6 @@ router.get("/getallcart", authenticate, getAllCart);
 router.put("/updatecart/:id", authenticate, updateCart);
 router.delete("/removecart/:id", authenticate, removeCart);
 router.delete("/clearcart", authenticate, clearCart);
-// router.get("/getcartproduct/:id", authenticate, getCartProduct);
+
 
 module.exports = router;
